@@ -1,4 +1,3 @@
-name: Deploy to testflight
 on:
   push:
     branches:
@@ -22,7 +21,9 @@ jobs:
         run: |
           new_build_number=$(( ${{ steps.last_build_number.outputs.build_number }} + 1 ))
           sed -i "s/\"buildNumber\": \"[^\"]*\"/\"buildNumber\": \"$new_build_number\"/g" app.json
-          git config --global user.email "abhishek@wednesday.is"
-          git config --global user.name "Abhishek Mishra"
-          git commit -am "Bumpup build number"
-          git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          branch: ${{ github.ref }}
