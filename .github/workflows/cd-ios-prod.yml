@@ -2,7 +2,7 @@ name: Deploy to testflight
 on:
   push:
     branches:
-      - master
+      - prod
 jobs:
   deploy-to-testflight:
     runs-on: ubuntu-latest
