@@ -10,12 +10,8 @@ jobs:
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
-
-      - name: 🏗 Setup Node
-        uses: actions/setup-node@v3
         with:
-          node-version: 18.x
-          cache: yarn
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get last build number
         id: last_build_number
@@ -26,9 +22,7 @@ jobs:
         run: |
           new_build_number=$(( ${{ steps.last_build_number.outputs.build_number }} + 1 ))
           sed -i "s/\"buildNumber\": \"[^\"]*\"/\"buildNumber\": \"$new_build_number\"/g" app.json
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
-          branch: ${{ github.ref }}
+          git config --global user.email "abhishek@wednesday.is"
+          git config --global user.name "Abhishek Mishra"
+          git commit -am "Bumpup build number"
+          git push
