@@ -1,0 +1,45 @@
+name: Deploy to testflight
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  deploy-to-testflight:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+        with:
+          token:
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: Get last build number
+        id: last_build_number
+        run: |
+          echo ::set-output name=build_number::$(sed -nE 's/.*"buildNumber": "([0-9]+)".*/\1/p' app.json)
+
+      - name: 🔏 Update Build Number
+        run: |
+          new_build_number=$(( ${{ steps.last_build_number.outputs.build_number }} + 1 ))
+          sed -i "s/\"buildNumber\": \"[^\"]*\"/\"buildNumber\": \"$new_build_number\"/g" app.json
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
