@@ -5,8 +5,7 @@
     <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f5879492fafecdb3e5b0e75_wednesday_logo.svg">
   </a>
   <p>
-    <h1 align="left">React Native Template
-    </h1>
+    <h1 align="left">React Native Template  </h1>
   </p>
 
   <p>
